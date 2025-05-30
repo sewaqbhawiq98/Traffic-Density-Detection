@@ -5,7 +5,7 @@
   "scripts": {
     "dev": "next dev",
     "build": "next build",
-    "start": "next start -p $PORT",
+    "start": "next start",
     "lint": "next lint"
   },
   "dependencies": {
@@ -42,6 +42,7 @@
     "clsx": "^2.1.1",
     "cmdk": "1.0.4",
     "date-fns": "^2.29.3",
+    "default-connector": "link:C:/Users/Bhavik/AppData/Local/pnpm/global/5/node_modules/dataconnect-generated/js/default-connector",
     "embla-carousel-react": "8.5.1",
     "firebase": "^11.6.0",
     "input-otp": "1.4.1",
@@ -70,5 +71,10 @@
     "postcss": "^8",
     "tailwindcss": "^3.4.17",
     "typescript": "^5"
+  },
+  "pnpm": {
+    "overrides": {
+      "default-connector": "link:C:/Users/Bhavik/AppData/Local/pnpm/global/5/node_modules/dataconnect-generated/js/default-connector"
+    }
   }
 }
