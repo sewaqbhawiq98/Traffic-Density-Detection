@@ -1,0 +1,85 @@
+[debug] [2025-04-13T06:51:38.595Z] ----------------------------------------------------------------------
+[debug] [2025-04-13T06:51:38.599Z] Command:       C:\Program Files\nodejs\node.exe C:\Users\Bhavik\AppData\Roaming\npm\node_modules\firebase-tools\lib\bin\firebase.js init
+[debug] [2025-04-13T06:51:38.599Z] CLI Version:   14.1.0
+[debug] [2025-04-13T06:51:38.599Z] Platform:      win32
+[debug] [2025-04-13T06:51:38.599Z] Node Version:  v22.14.0
+[debug] [2025-04-13T06:51:38.600Z] Time:          Sun Apr 13 2025 12:21:38 GMT+0530 (India Standard Time)
+[debug] [2025-04-13T06:51:38.600Z] ----------------------------------------------------------------------
+[debug] 
+[debug] [2025-04-13T06:51:38.609Z] > command requires scopes: ["email","openid","https://www.googleapis.com/auth/cloudplatformprojects.readonly","https://www.googleapis.com/auth/firebase","https://www.googleapis.com/auth/cloud-platform"]
+[debug] [2025-04-13T06:51:38.610Z] > authorizing via signed-in user (bhaviksevak98@gmail.com)
+[info] 
+     ######## #### ########  ######## ########     ###     ######  ########
+     ##        ##  ##     ## ##       ##     ##  ##   ##  ##       ##
+     ######    ##  ########  ######   ########  #########  ######  ######
+     ##        ##  ##    ##  ##       ##     ## ##     ##       ## ##
+     ##       #### ##     ## ######## ########  ##     ##  ######  ########
+
+You're about to initialize a Firebase project in this directory:
+
+  D:\traffic-density-system
+
+[info] 
+=== Project Setup
+[info] 
+[info] First, let's associate this project directory with a Firebase project.
+[info] You can create multiple project aliases by running firebase use --add, 
+[info] but for now we'll just set up a default project.
+[info] 
+[info] 
+=== Dataconnect Setup
+[info] +  Wrote dataconnect\dataconnect.yaml 
+[info] +  Wrote dataconnect\schema\schema.gql 
+[info] +  Wrote dataconnect\connector\connector.yaml 
+[info] +  Wrote dataconnect\connector\queries.gql 
+[info] +  Wrote dataconnect\connector\mutations.gql 
+[info] +  Detected WEB app in directory D:\traffic-density-system 
+[info] i  Detected react app. Enabling react generated SDKs. 
+[info] i  Writing your new SDK configuration to D:\traffic-density-system\dataconnect\connector/connector.yaml 
+[info] +  Wrote dataconnect\connector\connector.yaml 
+[info] i  dataconnect: downloading dataconnect-emulator-2.1.0.exe... {"metadata":{"emulator":{"name":"dataconnect"},"message":"downloading dataconnect-emulator-2.1.0.exe..."}}
+[debug] [2025-04-13T06:53:32.692Z] >>> [apiv2][query] GET https://storage.googleapis.com/firemat-preview-drop/emulator/dataconnect-emulator-windows-v2.1.0 
+[debug] [2025-04-13T06:53:33.365Z] <<< [apiv2][status] GET https://storage.googleapis.com/firemat-preview-drop/emulator/dataconnect-emulator-windows-v2.1.0 200
+[debug] [2025-04-13T06:53:33.366Z] <<< [apiv2][body] GET https://storage.googleapis.com/firemat-preview-drop/emulator/dataconnect-emulator-windows-v2.1.0 [stream]
+[debug] [2025-04-13T06:53:43.183Z] defaultcredentials: writing to file C:\Users\Bhavik\AppData\Roaming\firebase\bhaviksevak98_gmail_com_application_default_credentials.json
+[debug] [2025-04-13T06:53:43.206Z] Setting GAC to C:\Users\Bhavik\AppData\Roaming\firebase\bhaviksevak98_gmail_com_application_default_credentials.json {"metadata":{"emulator":{"name":"dataconnect"},"message":"Setting GAC to C:\\Users\\Bhavik\\AppData\\Roaming\\firebase\\bhaviksevak98_gmail_com_application_default_credentials.json"}}
+[info] I0413 12:23:44.212925   16696 codegen.go:82] [connector "default" javascriptSdk] Generating sources into "D:\\traffic-density-system\\dataconnect-generated\\js\\default-connector"
+I0413 12:23:44.221670   16696 generate.go:40] Generated all sources. Writing them to disk...
+I0413 12:23:44.230224   16696 collector.go:107] connector "default" javascriptSdk wrote into "D:\\traffic-density-system\\dataconnect-generated\\js\\default-connector"
+Generated sources: esm\index.esm.js [125B] esm\package.json [17B] index.cjs.js [160B] README.md [2774B] react\index.d.ts [228B] react\esm\package.json [17B] react\README.md [5417B] index.d.ts [246B] package.json [860B] react\package.json [468B] react\index.cjs.js [0B] react\esm\index.esm.js [0B] 
+I0413 12:23:44.295011   16696 installsdk.go:80] Running command: C:\Users\Bhavik\AppData\Roaming\npm\pnpm.cmd link dataconnect-generated\js\default-connector
+
+[info] i  Generated SDK code for default 
+[info] i  Visit https://firebase.google.com/docs/data-connect/web-sdk#react for more information on how to set up React Generated SDKs for Firebase Data Connect 
+[info] +  If you'd like to add more generated SDKs to your app your later, run firebase init dataconnect:sdk again 
+[info] 
+=== Firestore Setup
+[info] 
+[info] Firestore Security Rules allow you to define how and when to allow
+[info] requests. You can keep these rules in your project directory
+[info] and publish them with firebase deploy.
+[info] 
+[info] 
+[info] Firestore indexes allow you to perform complex queries while
+[info] maintaining performance that scales with the size of the result
+[info] set. You can keep index definitions in your project directory
+[info] and publish them with firebase deploy.
+[info] 
+[info] 
+=== Genkit Setup
+[info] Let's create a new codebase for your functions.
+[info] A directory corresponding to the codebase will be created in your project
+[info] with sample code pre-configured.
+
+[info] See https://firebase.google.com/docs/functions/organize-functions for
+[info] more information on organizing your functions using codebases.
+
+[info] Functions can be deployed with firebase deploy.
+
+[info] +  Wrote functions/package.json 
+[info] +  Wrote functions/.eslintrc.js 
+[info] +  Wrote functions/tsconfig.json 
+[info] +  Wrote functions/tsconfig.dev.json 
+[info] +  Wrote functions/src/index.ts 
+[info] +  Wrote functions/.gitignore 
+[info] 
