@@ -58,8 +58,6 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { MapContainer, TileLayer, Marker } from "react-leaflet";
-import { LineChart, Line, XAxis, YAxis, Tooltip } from "recharts";
 
 export default function DashboardPage() {
   const [user, setUser] = useState<any>(null);
@@ -67,7 +65,7 @@ export default function DashboardPage() {
   const [loading, setLoading] = useState(true);
   const [selectedLocation, setSelectedLocation] = useState("All Locations");
   const router = useRouter();
-  const [isDarkMode, setIsDarkMode] = useState(true);
+  const [isDarkMode, setIsDarkMode] = useState(true); // Dark mode default ON
   const [isDetecting, setIsDetecting] = useState(false);
 
   // States for Add Camera Dialog
@@ -80,12 +78,15 @@ export default function DashboardPage() {
   const [searchQuery, setSearchQuery] = useState("");
   const [filterType, setFilterType] = useState("all");
 
-  // Toggle dark mode on document element
+  // Toggle dark mode on html root element
   useEffect(() => {
-    document.documentElement.classList.toggle("dark", isDarkMode);
+    if (isDarkMode) {
+      document.documentElement.classList.add("dark");
+    } else {
+      document.documentElement.classList.remove("dark");
+    }
   }, [isDarkMode]);
 
-  // Check auth state and retrieve user role
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, async (user) => {
       if (user) {
@@ -97,7 +98,6 @@ export default function DashboardPage() {
       }
       setLoading(false);
     });
-
     return () => unsubscribe();
   }, [router]);
 
@@ -119,7 +119,6 @@ export default function DashboardPage() {
       "School Zone",
       "Hospital Area",
     ];
-
     const currentIndex = locations.indexOf(selectedLocation);
     const nextIndex = (currentIndex + 1) % locations.length;
     setSelectedLocation(locations[nextIndex]);
@@ -133,6 +132,11 @@ export default function DashboardPage() {
       description: newCameraDescription,
     });
     setShowAddCameraDialog(false);
+    // Reset fields
+    setNewCameraName("");
+    setNewCameraLocation("");
+    setNewCameraType("");
+    setNewCameraDescription("");
   };
 
   const toggleDetection = () => {
@@ -194,7 +198,10 @@ export default function DashboardPage() {
                 </span>
                 {userRole && <UserRoleBadge role={userRole} />}
               </div>
-              <ThemeToggle />
+              <ThemeToggle
+                isDarkMode={isDarkMode}
+                setIsDarkMode={setIsDarkMode}
+              />
               <Button variant="outline" size="sm" onClick={handleSignOut}>
                 Sign Out
               </Button>
@@ -330,210 +337,73 @@ export default function DashboardPage() {
               </Select>
             </div>
 
-            {/* Date, Time, Weather, Location Widgets */}
-            <div className="grid gap-4 grid-cols-1 md:grid-cols-2 lg:grid-cols-4">
-              <DateTimeWidget />
-              <WeatherWidget />
-              <LocationWidget />
-              {userRole === "authority" && (
-                <Card>
-                  <CardHeader className="pb-2">
-                    <CardTitle className="text-sm font-medium">
-                      System Status
-                    </CardTitle>
-                  </CardHeader>
-                  <CardContent>
-                    <div className="flex items-center gap-2">
-                      <div className="w-3 h-3 rounded-full bg-green-500"></div>
-                      <span>All systems operational</span>
-                    </div>
-                    <div className="text-xs text-muted-foreground mt-1">
-                      Last updated: {new Date().toLocaleTimeString()}
-                    </div>
-                  </CardContent>
-                </Card>
-              )}
-            </div>
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+              <Card>
+                <CardHeader>
+                  <CardTitle>Date & Time</CardTitle>
+                  <CardDescription>Current date and time</CardDescription>
+                </CardHeader>
+                <CardContent>
+                  <DateTimeWidget />
+                </CardContent>
+              </Card>
 
-            {/* Main Stats */}
-            <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-4">
-              <Card className="bg-background/90">
-                <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                  <CardTitle className="text-sm font-medium">
-                    Active Cameras
-                  </CardTitle>
-                  <Camera className="h-4 w-4 text-muted-foreground" />
+              <Card>
+                <CardHeader>
+                  <CardTitle>Weather</CardTitle>
+                  <CardDescription>Current weather conditions</CardDescription>
                 </CardHeader>
                 <CardContent>
-                  <div className="text-2xl font-bold">12</div>
-                  <p className="text-xs text-muted-foreground">
-                    +2 from last week
-                  </p>
+                  <WeatherWidget location={selectedLocation} />
                 </CardContent>
               </Card>
-              <Card className="bg-background/90">
-                <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                  <CardTitle className="text-sm font-medium">
-                    Traffic Density
-                  </CardTitle>
-                  <Car className="h-4 w-4 text-muted-foreground" />
+
+              <Card>
+                <CardHeader>
+                  <CardTitle>Location</CardTitle>
+                  <CardDescription>Selected monitoring location</CardDescription>
                 </CardHeader>
                 <CardContent>
-                  <div className="text-2xl font-bold">High</div>
-                  <p className="text-xs text-muted-foreground">
-                    +18% from yesterday
-                  </p>
-                </CardContent>
-              </Card>
-              <Card className="bg-background/90">
-                <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                  <CardTitle className="text-sm font-medium">
-                    Speed Warnings
-                  </CardTitle>
-                  <AlertTriangle className="h-4 w-4 text-muted-foreground" />
-                </CardHeader>
-                <CardContent>
-                  <div className="text-2xl font-bold">24</div>
-                  <p className="text-xs text-muted-foreground">
-                    -3% from yesterday
-                  </p>
-                </CardContent>
-              </Card>
-              <Card className="bg-background/90">
-                <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                  <CardTitle className="text-sm font-medium">
-                    Pedestrian Count
-                  </CardTitle>
-                  <Users className="h-4 w-4 text-muted-foreground" />
-                </CardHeader>
-                <CardContent>
-                  <div className="text-2xl font-bold">45</div>
-                  <p className="text-xs text-muted-foreground">
-                    +201 from yesterday
-                  </p>
+                  <LocationWidget location={selectedLocation} />
+                  <Button
+                    variant="outline"
+                    className="mt-4 w-full"
+                    onClick={handleChangeLocation}
+                  >
+                    Change Location
+                  </Button>
                 </CardContent>
               </Card>
             </div>
 
-            <Tabs defaultValue="overview" className="space-y-4">
+            <Tabs defaultValue="density" className="mt-6">
               <TabsList>
-                <TabsTrigger value="overview">Overview</TabsTrigger>
-                <TabsTrigger value="cameras">Camera Feeds</TabsTrigger>
-                <TabsTrigger value="warnings">Speed Warnings</TabsTrigger>
-                {userRole === "authority" && (
-                  <TabsTrigger value="analytics">Analytics</TabsTrigger>
-                )}
+                <TabsTrigger value="density">Traffic Density</TabsTrigger>
+                <TabsTrigger value="speed">Speed Limit Warnings</TabsTrigger>
+                <TabsTrigger value="camera">Camera Feed</TabsTrigger>
                 <TabsTrigger value="safety">Safety Guidelines</TabsTrigger>
               </TabsList>
-              <TabsContent value="overview" className="space-y-4">
-                <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-7">
-                  <Card className="col-span-4 bg-background/90">
-                    <CardHeader>
-                      <CardTitle>Traffic Density Over Time</CardTitle>
-                      <CardDescription>
-                        Hourly traffic density measurements from all active cameras
-                      </CardDescription>
-                    </CardHeader>
-                    <CardContent className="pl-2">
-                      <TrafficDensityChart />
-                    </CardContent>
-                  </Card>
-                  <Card className="col-span-3 bg-background/90">
-                    <CardHeader>
-                      <CardTitle>Speed Limit Warnings</CardTitle>
-                      <CardDescription>
-                        Recent speed limit violations
-                      </CardDescription>
-                    </CardHeader>
-                    <CardContent>
-                      <SpeedLimitWarnings />
-                    </CardContent>
-                  </Card>
-                </div>
+
+              <TabsContent value="density" className="mt-4">
+                <TrafficDensityChart location={selectedLocation} />
               </TabsContent>
-              <TabsContent value="cameras" className="space-y-4">
-                <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
-                  <CameraFeed id="camera-1" name="Main Street" location="School Zone" />
-                  <CameraFeed id="camera-2" name="Highway Junction" location="Accident Prone Area" />
-                  <CameraFeed id="camera-3" name="Downtown" location="High Pedestrian Area" />
-                </div>
+
+              <TabsContent value="speed" className="mt-4">
+                <SpeedLimitWarnings location={selectedLocation} />
               </TabsContent>
-              <TabsContent value="warnings" className="space-y-4">
-                <Card className="bg-background/90">
-                  <CardHeader>
-                    <CardTitle>Speed Limit Warnings</CardTitle>
-                    <CardDescription>
-                      Detailed view of all speed limit warnings
-                    </CardDescription>
-                  </CardHeader>
-                  <CardContent>
-                    <SpeedLimitWarnings detailed />
-                  </CardContent>
-                </Card>
+
+              <TabsContent value="camera" className="mt-4">
+                <CameraFeed location={selectedLocation} />
+                <Button
+                  className="mt-4"
+                  onClick={toggleDetection}
+                  variant={isDetecting ? "destructive" : "default"}
+                >
+                  {isDetecting ? "Stop Detection" : "Start Detection"}
+                </Button>
               </TabsContent>
-              {userRole === "authority" && (
-                <TabsContent value="analytics" className="space-y-4">
-                  <Card className="bg-background/90">
-                    <CardHeader>
-                      <CardTitle>Advanced Analytics</CardTitle>
-                      <CardDescription>
-                        Detailed traffic analysis and predictions
-                      </CardDescription>
-                    </CardHeader>
-                    <CardContent>
-                      <div className="grid gap-4 md:grid-cols-2">
-                        <div>
-                          <h3 className="text-lg font-medium mb-2">
-                            Traffic Patterns
-                          </h3>
-                          <p className="text-sm text-muted-foreground mb-4">
-                            Analysis of traffic patterns over the past 30 days shows a 15% increase in congestion during peak hours.
-                          </p>
-                          <LineChart
-                            width={300}
-                            height={160}
-                            data={[
-                              { day: "Mon", traffic: 120 },
-                              { day: "Tue", traffic: 150 },
-                              { day: "Wed", traffic: 180 },
-                              { day: "Thu", traffic: 130 },
-                              { day: "Fri", traffic: 200 },
-                              { day: "Sat", traffic: 170 },
-                              { day: "Sun", traffic: 160 },
-                            ]}
-                          >
-                            <Line type="monotone" dataKey="traffic" stroke="#3b82f6" strokeWidth={2} />
-                            <XAxis dataKey="day" />
-                            <YAxis />
-                            <Tooltip />
-                          </LineChart>
-                        </div>
-                        <div className="h-40 w-full rounded overflow-hidden">
-                          <MapContainer
-                            center={[28.6139, 77.209]}
-                            zoom={13}
-                            className="h-full w-full rounded"
-                            scrollWheelZoom={false}
-                          >
-                            <TileLayer
-                              url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
-                              attribution="© OpenStreetMap contributors"
-                            />
-                            {[
-                              { lat: 28.61, lng: 77.21 },
-                              { lat: 28.62, lng: 77.215 },
-                              { lat: 28.605, lng: 77.205 },
-                            ].map((loc, i) => (
-                              <Marker key={i} position={[loc.lat, loc.lng]} />
-                            ))}
-                          </MapContainer>
-                        </div>
-                      </div>
-                    </CardContent>
-                  </Card>
-                </TabsContent>
-              )}
-              <TabsContent value="safety" className="space-y-4">
+
+              <TabsContent value="safety" className="mt-4">
                 <SafetyGuidelines />
               </TabsContent>
             </Tabs>
